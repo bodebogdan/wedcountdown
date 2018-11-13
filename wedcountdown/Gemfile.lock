@@ -59,6 +59,8 @@ GEM
     debug_inspector (0.0.3)
     erubis (2.7.0)
     execjs (2.7.0)
+    flipclockjs-rails (0.7.7)
+      jquery-rails (>= 1.0.17)
     foundation-rails (6.4.3.0)
       railties (>= 3.1.0)
       sass (>= 3.3.0, < 3.5)
@@ -173,6 +175,7 @@ DEPENDENCIES
   actionpack (>= 4.2.5.2)
   byebug
   coffee-rails (~> 4.1.0)
+  flipclockjs-rails
   foundation-rails
   jbuilder (~> 2.0)
   jquery-rails

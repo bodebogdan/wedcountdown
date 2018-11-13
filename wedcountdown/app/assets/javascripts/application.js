@@ -15,4 +15,5 @@
 //= require turbolinks
 //= require wedding
 //= require moment
+//= require flipclock.min
 //= require_tree .

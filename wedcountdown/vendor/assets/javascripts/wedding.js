@@ -1,5 +1,17 @@
 $(document).ready(function(){
-	console.log(moment().format());
+	var date1 = new moment('2019-05-25T00:00:00');
+	var date2 = new moment();
+	var date3 = new moment('2019-05-24');
+	var crt = {'hour':moment().hour(), 'minute':moment().minute(), 'second': moment().second()};
+	date3.set(crt);
+	var years = date1.diff(date2,'years');
+	var months = date1.diff(date2,'months') - (years * 12);
+	date2.add(years,'years').add(months,'months');
+	var days = date1.diff(date2,'days');
+	var hours = date1.diff(date3,'hours');
+	var mins = date1.diff(date3,'minutes');
+	var secs = date1.diff(date3,'seconds');
+	
 timer_text();
 });
 
@@ -15,9 +27,9 @@ setInterval(update_text,1000);
 }
 function update_text(){
 message = CalDate3(1);
-	$("#miro_bode_date").text(message);	
+	$("#miro_bode_date").html(message);	
 message = CalDate3(2);
-	$("#andreea_jon_date").text(message);	
+	$("#andreea_jon_date").html(message);	
 
 
 }
@@ -108,17 +120,26 @@ function CalDate2(flag) {
 function CalDate3(flag) {
 	var date1 = new moment((flag ==1?'2019-05-25T00:00:00':'2019-05-18T00:00:00'));
 	var date2 = new moment();
-	var date3 = new moment((flag ==1?'2019-05-24':'2019-05-17'));
-	
-	
-	var message = (flag ==1?"Miro and Bode's wedding will be in : ":"Andreea and Jon's wedding will be in : "); 
-     
-    message += preciseDiff(date2,date1);
-    
-     
+	console.log(date1 < date2);
+	var endmessage = '';
+	var midMessage = ''
+	var date3 = new moment((flag ==1?'2019-05-24':'2019-05-17'));	
+	var message = (flag ==1?"Miro and Bode's wedding":"Andreea and Jon's wedding");
+	//preciseDiffArray(date2,date1);      
+    if(date1>date2){
+    	midMessage =  " will be in <br>";
+    }
+    else if(date1.year() == date2.year() && date1.month() == date2.month() && date1.date() == date2.date())
+    	return message += " is today!!!"
+    else{
+    	midMessage = " was <br> ";
+    	endmessage = '<br> ago.';
+    }
+    message += midMessage + preciseDiff(date2,date1) + endmessage;     
     
     return message
 }
+	 
 
     var STRINGS = {
         nodiff: '',
@@ -209,3 +230,142 @@ function CalDate3(flag) {
 
         return result.join(STRINGS.delimiter);
     };
+
+
+
+
+var last = {
+	'months': '0',
+	'days': '0',
+	'hours': '0',
+	'minutes': '0',
+	'seconds': '0'
+};
+function compare_times(t1,t2,f){
+	switch(f){
+		case 'M': 
+			return t1["months"] !== t2["months"];
+		case 'd': 
+			return t1["days"] !== t2["days"];
+		case 'h': 
+			return t1["hours"] !== t2["hours"];
+		case 'm': 
+			return t1["minutes"] !== t2["minutes"];
+		case 's': 
+			return t1["seconds"] !== t2["seconds"];
+		default:
+			return false;	
+	}
+}
+
+var tickState = true;
+function preciseDiffArray(d1,d2){
+ 	var array = preciseDiff(d1,d2).replace(/\s*months\s*/,'M;').replace(/\s*days\s*/,'d;').replace(/\s*hours\s*/,'h;').replace(/\s*minutes\s*/,'m;').replace(/\s*seconds\s*/,'s;').replace(/\s*month\s*/,'M;').replace(/\s*day\s*/,'d;').replace(/\s*hour\s*/,'h;').replace(/\s*minute\s*/,'m;').replace(/\s*second\s*/,'s;').split(';');
+ 	var month='0',days='0',hours='0',minutes='0',seconds='0';
+ 	//console.log(array);
+ 	for(var i= 0; i<array.length;i++){
+ 		if(array[i].length<2)
+ 			continue;
+ 		switch(array[i].slice(-1)){
+ 			case 'M': 
+ 				months = array[i].slice(0,-1);
+ 				break;
+ 			case 'd': 
+ 				days = array[i].slice(0,-1);
+ 				break;
+ 			case 'h': 
+ 				hours = array[i].slice(0,-1);
+ 				break;
+ 			case 'm': 
+ 				minutes = array[i].slice(0,-1);
+ 				break;
+			case 's': 
+ 				seconds = array[i].slice(0,-1);
+ 				break;
+ 			default:
+ 				break;	 			
+ 		}
+ 	}
+
+	var dct = {
+		'months': months,
+		'days': days,
+		'hours': hours,
+		'minutes': minutes,
+		'seconds': seconds
+	}
+	updateTime(dct);
+	//console.log(dct);
+ }			
+var tickElements = Array.from(document.querySelectorAll('.tick'));
+function updateTime(now){
+	if(now == last)
+		return;
+	console.log('Now\n');console.log(now);
+	console.log('Last\n');console.log(last);
+  	var monthsContainer = document.querySelector('.months');
+	var daysContainer = document.querySelector('.days');
+	var hoursContainer = document.querySelector('.hours');
+	var minutesContainer = document.querySelector('.minutes');
+	var secondsContainer = document.querySelector('.seconds');
+	var tickElements = Array.from(document.querySelectorAll('.tick'));
+  
+  if (compare_times(now,last,'M')) {
+    updateContainer(monthsContainer, now["months"]);
+  }
+  if (compare_times(now,last,'d')) {
+    updateContainer(daysContainer, now["days"]);
+  }
+  if (compare_times(now,last,'h')) {
+    updateContainer(hoursContainer, now["hours"]);
+  }
+  
+  if (compare_times(now,last,'m')) {
+    updateContainer(minutesContainer, now["minutes"]);
+  }
+    
+  if (compare_times(now,last,'s')) {
+    updateContainer(secondsContainer, now["seconds"]);
+  }
+  
+  last = now;
+}
+
+function tick () {
+  tickElements.forEach(t => t.classList.toggle('tick-hidden'));
+}
+
+function updateContainer (container, newTime) {
+  var time = newTime.split('');
+  
+  if (time.length === 1) {
+    time.unshift('0');
+  }
+  
+  
+  var first = container.firstElementChild
+  if (first.lastElementChild.textContent !== time[0]) {
+    updateNumber(first, time[0]);
+  }
+  
+  var last = container.lastElementChild
+  if (last.lastElementChild.textContent !== time[1]) {
+    updateNumber(last, time[1]);
+  }
+}
+
+function updateNumber (element, number) {
+  //element.lastElementChild.textContent = number
+  var second = element.lastElementChild.cloneNode(true);
+  second.textContent = number;
+  
+  element.appendChild(second);
+  element.classList.add('move');
+
+  setTimeout(function () {
+    element.classList.remove('move');
+  }, 990);
+  setTimeout(function () {
+    element.removeChild(element.firstElementChild);
+  }, 990);
+}

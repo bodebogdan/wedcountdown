@@ -1,0 +1,93 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-image: url(https://www.wallums.com/images/detailed/11/Pastel-Trees-wall-decla-b.jpg);
+  background-size: 100vw 100vh;
+  background-repeat: no-repeat;
+  display: block;
+}
+.main{
+  display: inline-block;
+}
+#miro_bode {
+  padding-top:40px;
+  font-family: cursive;
+  color: rgb(25,24,255);
+  text-align: center;
+  width: 49vw;
+  float: left;
+}
+#miro_bode img{
+  width: 30vh;
+}
+#andreea_jon {
+  padding-top:40px;
+  font-family: cursive;
+  color: rgb(25,24,255);
+  text-align: center;
+  width: 49vw;
+  float: right;
+}
+#andreea_jon img{
+  width: 30vh;
+}
+.clock {
+  height: 5vh;
+  color: white;
+  font-size: 4vh;
+  font-family: sans-serif;
+  line-height: 5vh;
+  display: flex;
+  position: relative;
+  /*background: green;*/
+  overflow: hidden;
+}
+
+.clock::before, .clock::after {
+  content: '';
+  width: 7ch;
+  height: 3vh;
+  background: linear-gradient(to top, transparent, black);
+  position: absolute;
+  z-index: 2;
+}
+
+.clock::after {
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent, black);
+}
+
+.clock > div {
+  display: flex;
+}
+
+.tick {
+  line-height: 3vh;
+}
+
+.tick-hidden {
+  opacity: 0;
+}
+
+.move {
+  animation: move linear 1s infinite;
+}
+
+@keyframes move {
+  from {
+    transform: translateY(0vh);
+  }
+  to {
+    transform: translateY(-20vh);
+  }
+}
+
